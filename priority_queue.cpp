@@ -11,6 +11,7 @@ struct cmp
         return a<b;
     }
 };
+
 int main()
 {
     int i,j,m,n;
