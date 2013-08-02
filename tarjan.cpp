@@ -75,7 +75,7 @@ int main()
         scanf("%d%d",&a2,&b2);
         for(i=1;i<=m;i++)
         {
-            if(!mark[i])
+            if(!mark[i])//find root
             {
                 lca(i);
                 break;
