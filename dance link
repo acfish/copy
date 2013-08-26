@@ -45,12 +45,13 @@ inline void remove(int nn)
     L[R[nn]]=L[nn];
     for(int ii=D[nn];ii!=nn;ii=D[ii])
     {
-        for(int jj=R[ii];jj!=ii;jj=R[jj])
+        for(int jj=R[ii];jj!=ii;jj=R[jj])//为什么没有删除到ii呢，ii要保留，因为恢复需要，并且，由于在列的最顶
+//该列删除，对于下一次迭代，只需考虑其他列的行，而这其中，肯定都被删除了。
         {
             U[D[jj]]=U[jj];
             D[U[jj]]=D[jj];
             S[xcol[jj]]--;
-        }
+         }
     }
     return ;
 }
@@ -97,6 +98,7 @@ void dfs(int deep)
         for(int jj=R[ii];jj!=ii;jj=R[jj])remove(xcol[jj]);
         dfs(deep+1);
         for(int jj=L[ii];jj!=ii;jj=L[jj])resume(xcol[jj]);
+        //删除的顺序要相反，不然得不到原来的顺序。
     }
     resume(mark);
     return ;
