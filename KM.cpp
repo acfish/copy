@@ -1,3 +1,5 @@
+http://poj.org/problem?id=2195
+
 #include<cstdio>
 #include<algorithm>
 #include<cstring>
@@ -109,3 +111,5 @@ int main()
     }
     return 0;
 }
+参考资料：http://blog.sina.com.cn/s/blog_691ce2b701016reh.html
+
