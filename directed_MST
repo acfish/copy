@@ -1,0 +1,108 @@
+#include<cstdio>
+#include<iostream>
+#include<cstring>
+#include<cmath>
+#include<vector>
+using namespace std;
+
+const double eps=1e-8;
+const double MAXN=1e9;
+struct node
+{
+    double x;
+    double y;
+}s[120];
+int pre[120],mark[120],ID[120];
+struct node1
+{
+    int u;
+    int v;
+    double cost;
+}w[10100];
+vector<int>q[120];
+double In[120];
+double get_len(int xx,int yy)
+{
+    return sqrt((s[xx].x-s[yy].x)*(s[xx].x-s[yy].x)+(s[xx].y-s[yy].y)*(s[xx].y-s[yy].y));
+}
+double directed_MST(int nn,int mm,int root)
+{
+    double ret=0.0;
+    while(1){
+    int get_id=1;
+    for(int ii=1;ii<=nn;ii++){In[ii]=MAXN;pre[ii]=-1;}
+    for(int ii=1;ii<=mm;ii++)
+    {
+        if(w[ii].cost<In[w[ii].v]&&w[ii].u!=w[ii].v)
+        {
+            In[w[ii].v]=w[ii].cost;
+            pre[w[ii].v]=w[ii].u;
+        }
+    }
+    for(int ii=1;ii<=nn;ii++)
+    {
+        if(ii==root)continue;
+        if(In[ii]==MAXN)return -1;
+    }
+    memset(mark,-1,sizeof(mark));
+    memset(ID,-1,sizeof(ID));
+    In[root]=0;
+    pre[root]=-1;
+    for(int ii=1;ii<=nn;ii++)
+    {
+        ret+=In[ii];
+       // cout<<ret<<endl;
+        int vv=ii;
+        while(mark[vv]!=ii&&ID[vv]==-1&&vv!=root)
+        {
+            mark[vv]=ii;
+            vv=pre[vv];
+        }//find circle
+        if(vv!=root&&ID[vv]==-1)//只有在没有找到的环中，或者是在根上，或者是在其他的已经标记的环中。
+        {
+            for(int uu=pre[vv];uu!=vv;uu=pre[uu])
+            ID[uu]=get_id;
+            ID[vv]=get_id++;
+        }
+    }
+    if(get_id==1)break;
+    for(int ii=1;ii<=nn;ii++)
+    if(ID[ii]==-1)ID[ii]=get_id++;
+    for(int ii=1;ii<=mm;ii++)
+    {
+        int vv=w[ii].v;
+        w[ii].u=ID[w[ii].u];
+        w[ii].v=ID[w[ii].v];
+        if(w[ii].u!=w[ii].v)
+            w[ii].cost-=In[vv];
+    }
+    nn=get_id-1;
+    root=ID[root];
+    }
+    return ret;
+}
+
+int main()
+{
+    int a,b,m,n;
+    while(scanf("%d%d",&n,&m)!=EOF)
+    {
+        for(int ii=1;ii<=n;ii++)q[ii].clear();
+        for(int ii=1;ii<=n;ii++)
+            scanf("%lf%lf",&s[ii].x,&s[ii].y);
+        for(int ii=1;ii<=m;ii++)
+        {
+            int xx,yy;
+            scanf("%d%d",&xx,&yy);
+            //xx--;
+            //yy--;
+            w[ii].u=xx;
+            w[ii].v=yy;
+            if(xx==yy)w[ii].cost=MAXN;
+            else w[ii].cost=get_len(xx,yy);
+        }
+        double ans=directed_MST(n,m,1);
+        if(ans==-1)printf("poor snoopy\n");
+        else printf("%.2f\n",ans);
+    }
+}
