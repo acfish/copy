@@ -1,0 +1,73 @@
+#include<cstdio>
+#include<iostream>
+#include<algorithm>
+#include<cmath>
+#include<cstring>
+#include<vector>
+using namespace std;
+int marky[510];
+int pre[510];
+vector<int>q[510];
+struct node
+{
+    int ss;
+    int ee;
+    int startxx,startyy,enxx,enyy;
+}s[510];
+int trans(char w[10])
+{
+    return ((w[0]-'0')*10+(w[1]-'0'))*60+((w[3]-'0')*10+(w[4]-'0'));
+}
+int get_len(int nn,int mm)
+{
+    return abs(s[nn].enxx-s[mm].startxx)+abs(s[nn].enyy-s[mm].startyy);
+}
+bool find(int nn)
+{
+    int len=q[nn].size();
+    for(int ii=0;ii<len;ii++)
+    {
+        int son=q[nn][ii];
+        if(!marky[son])
+        {
+            marky[son]=1;
+            if(pre[son]==-1||find(pre[son]))
+            {
+                pre[son]=nn;
+                return true;
+            }
+        }
+    }
+    return false;
+}
+int main()
+{
+    int n;
+    scanf("%d",&n);
+    while(n--)
+    {
+        memset(pre,-1,sizeof(pre));
+        int num;
+        scanf("%d",&num);
+        for(int ii=1;ii<=num;ii++)q[ii].clear();
+        for(int ii=1;ii<=num;ii++)
+        {
+            char time[10];
+            scanf("%s%d%d%d%d",time,&s[ii].startxx,&s[ii].startyy,&s[ii].enxx,&s[ii].enyy);
+            s[ii].ss=trans(time);
+            s[ii].ee=s[ii].ss+abs(s[ii].startxx-s[ii].enxx)+abs(s[ii].startyy-s[ii].enyy);
+        }
+        for(int ii=1;ii<=num;ii++)
+            for(int jj=1;jj<=num;jj++)
+                if(s[ii].ee+1+get_len(ii,jj)<=s[jj].ss)
+                    q[ii].push_back(jj);
+        int ans=0;
+        for(int ii=1;ii<=num;ii++)
+        {
+            memset(marky,0,sizeof(marky));
+            if(find(ii))ans++;
+        }
+        printf("%d\n",num-ans);
+    }
+    return 0;
+}
