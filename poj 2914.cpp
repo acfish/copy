@@ -51,7 +51,6 @@ int find_min(int nn)
     for(int ii=0;ii<nn-1;ii++)
     {
         relax(nn);
-       // cout<<get_min<<endl;
         ans=min(get_min,ans);
         if(ans==0)return 0;
         combine[T]=1;
